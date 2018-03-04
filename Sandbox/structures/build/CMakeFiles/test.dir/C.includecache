@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/swapnildevikar/Documents/Udacity/NPTEL/C++/Sandbox/structures.c
+stdio.h
+/Users/swapnildevikar/Documents/Udacity/NPTEL/C++/Sandbox/stdio.h
+

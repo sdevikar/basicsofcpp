@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/return_by_reference/return_by_value_and_reference.cpp
+iostream
+-
+

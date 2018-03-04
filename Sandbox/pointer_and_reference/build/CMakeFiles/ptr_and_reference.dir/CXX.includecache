@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/pointer_and_reference/pointer_and_reference.cpp
+iostream
+-
+

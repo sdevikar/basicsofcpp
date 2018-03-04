@@ -1,0 +1,4 @@
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/memory_management/build/CMakeFiles/rebuild_cache.dir
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/memory_management/build/CMakeFiles/edit_cache.dir
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/memory_management/build/CMakeFiles/overriding_new_and_delete.dir
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/memory_management/build/CMakeFiles/memory_management.dir

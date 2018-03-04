@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/memory_management/memory_management.cpp
+iostream
+-
+cstdlib
+-
+

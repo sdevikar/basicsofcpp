@@ -1,0 +1,3 @@
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/function_pointers/build/CMakeFiles/rebuild_cache.dir
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/function_pointers/build/CMakeFiles/edit_cache.dir
+/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/function_pointers/build/CMakeFiles/fptr.dir
