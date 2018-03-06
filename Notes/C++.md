@@ -208,3 +208,17 @@ In summary, new operator takes 3 forms. new, new[] and new(). First two forms mu
 - Cannot be overridden
 - Starts with ~
 - In some rare cases, destructor can be called using delete keyword
+- Destructors are called in the reverse order of constructors. e.g.
+```cpp
+int main(void){
+  ClassA obj1;
+  ClassB obj2;
+
+  return 0;
+}
+```
+In the above case,
+- Constructor of ClassA will be called first
+- Constructor of ClassB will be called next
+- Destructor of ClassB will be called first
+- Destructor of ClassA will be called next

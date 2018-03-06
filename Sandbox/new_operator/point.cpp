@@ -30,6 +30,6 @@ void Point::SetY(int y){
 }
 
 int Point::init(int val){
-  cout << "Init called" << endl;
+  cout << "Init called from initializer list for:" << val << endl;
   return val;
 }
