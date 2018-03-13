@@ -222,3 +222,28 @@ In the above case,
 - Constructor of ClassB will be called next
 - Destructor of ClassB will be called first
 - Destructor of ClassA will be called next
+
+
+## Copy Constructor
+- We have instantiated Complex class object the following ways:
+```cpp
+//case1: simplest case:
+Complex comp(2,3);
+
+//case2: somewhat different way:
+Complex comp = {2,3};
+```
+- We can also do something like this:
+```cpp
+//case3: pass another object to the constructor of complex class
+Complex comp2(comp);
+
+//case4: Or using assignment:
+Complex comp2 = comp;
+```
+
+- Case 3 and 4 above invoke a constructor that is known as a *copy constructor*.
+This constructor looks like this:
+```cpp
+Complex::Complex(const Complex &);
+```
