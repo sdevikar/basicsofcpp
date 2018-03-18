@@ -112,7 +112,7 @@ that they both work on inputs (we call them arguments) and produce an output.
   - order of operation using operators is decided by rules of precedence.  For functions, usually we don't need to worry about precedence. However, for example, when we pass an expression (e.g. a function call) as an argument to a function, arguments will be evaluated based on how they're nested
   - operator operation is pre-defined. Function definitions can be modified as needed
 - C++ provides a way to associate a function with a particular operator. This is facilitated by keyword ```operator```
-- The syntax for this is ```operator<>operator_name(arguments)```
+- The syntax for this is ```operator<operator_name>(arguments)```
 
 ## Operator overloading rules:
 - You cannot invent your own operators. e.g. you cannot define ** as an operator and define it's operation logic
@@ -246,4 +246,75 @@ Complex comp2 = comp;
 This constructor looks like this:
 ```cpp
 Complex::Complex(const Complex &);
+```
+- Apart from case#3 and case#4, copy constructors are invoked whenever there is
+copying of object involved. This includes passing object by value to a function
+```cpp
+// case5: Here compformal will make a copy of compactual
+// therefore a copy constructor will be invoked
+void DoSomething(Complex compformal){
+
+}
+
+int main(){
+  Complex compactual(2,3);
+  DoSomething(compactual);
+}
+
+```
+- Copy constructor can have multiple signatures. Following signatures will be
+recognized as copy constructor by C++:
+```cpp
+// signature with constant reference. Formal argument can't be modified
+MyClass(const MyClass& myclass);
+
+// signature with a non const reference. Formal argument can be modified
+// this is important for certain designs
+MyClass(MyClass& myclass);
+
+// signature with volatile const reference. Formal argument can't be modified
+MyClass(volatile const MyClass& myclass);
+
+// signature with volatile reference. Formal argument can be modified
+MyClass(volatile MyClass& myclass);
+
+```
+- Following signatures will NOT be recognized as copy constructors by cpp
+```cpp
+MyClass(MyClass* myclass);
+MyClass(const MyClass* myclass);
+
+//here, by specifying the pass by value mechanism, the prerequisite is that
+// the actual parameter needs to get copied to formal parameter
+// this renders this kind of constructor useless, because the act of copying
+// is a prerequisite for this copy constructor to work
+MyClass(MyClass myclass);
+
+```
+
+- As with the normal constructor, if user doesn't write a copy constructor,
+compiler will provide one
+- However, since compiler doesn't know how to do deep copy for user defined objects,
+it will provide bit by bit copy. (similar to memcopy). This approach doesn't always work though.
+More on this later.
+- The most important point to remember is that the default copy constructor does a *shallow copy*
+
+## Copy assignment operator:
+- Consider the following lines of code:
+```cpp
+Complex c1(2,3); // constructed complex object c1 from scratch
+Complex c2(c1); // constructed a complex object c2 from c1. Copy constructor will Be called here
+
+Complex c1 = c2; // c1 already existed. We're copying c2 into c1. This requires =operator to be overloaded
+```
+- The assignment copy operator is nothing but overloaded = operator.
+```cpp
+Complex& operator=(const Complex& c){
+  // do deep copy here. e.g. this->real = c.real;
+}
+```
+- Notice that we're returning Complex& i.e. reference to same type as of the class. This is to support expressions like:
+```cpp
+Complex c1,c2,c3;
+c1 = c2 = c3; // chain assignment
 ```

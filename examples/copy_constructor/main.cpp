@@ -3,6 +3,8 @@
 
 using namespace std;
 
+void PassByValue(Complex cformal);
+
 int main(void){
 
   cout << "Creating C1 object" << endl;
@@ -14,5 +16,13 @@ int main(void){
   cout << "Constructing C3 by usig = assignment" << endl;
   Complex c3 = c1;
 
+  cout << " Calling PassByValue... expecting copy constructor to be called" << endl;
+  PassByValue(c3);
+
   return 0;
+}
+
+void PassByValue(Complex cformal)
+{
+  cout << "PassByValue called..." << endl;
 }

@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/call_by_reference/call_by_reference.cpp" "/Users/swapnildevikar/Documents/NPTEL/C++/Sandbox/call_by_reference/build/CMakeFiles/call_by_reference.dir/call_by_reference.cpp.o"
+  "/Users/swapnildevikar/Documents/NPTEL/C++/examples/call_by_reference/call_by_reference.cpp" "/Users/swapnildevikar/Documents/NPTEL/C++/examples/call_by_reference/build/CMakeFiles/call_by_reference.dir/call_by_reference.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 
