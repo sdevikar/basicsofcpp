@@ -318,3 +318,43 @@ Complex& operator=(const Complex& c){
 Complex c1,c2,c3;
 c1 = c2 = c3; // chain assignment
 ```
+- The above is equivalent to ```c1 = (c2=c3)```. Unless the expression ```c2=c3``` doesn't return Complex& type, ```c1 = <expression>``` will not work.
+- There is a caveat in copy assignment operator. The caveat being, we always want to check if the object being copied is the same as current object. This is to make sure that we're not trying to write freed memory, that we may have freed, before executing the logic inside copy operator to avoid memory leak
+
+## Const objects:
+- You can create const objects for classes like so:
+```cpp
+const MyClass obj;
+```
+- This basically means, the instance is read only and you cannot do ANY operations on it.
+- Any operations include calling getter and setter methods or directly modifying public members of the class.
+- Obviously, this isn't helpful to do anything at all. To perform any operations on the class, we need constant member functions
+- Concept: When a method is invoked on an object, ```this``` gets passed as a default argument to the function (i.e. a method needs a pointer to class object). (In python, this is explicitly done manually using ```self```)
+- In C++, the object of class gets passed to the method implicitly as below:
+```cpp
+MyClass * const this
+```
+- In case of a constant object, we need to be able to pass the following to the method as an implicit parameter
+```cpp
+const MyClass * const this
+```
+- We achieve this by doing the following modification to the function definition:
+```cpp
+void MyMethod() const { // notice the use of const before curly brace
+  // some logic here
+}
+```
+- The method above is saying that it can be invoked on a constant object
+- In a constant member function like above, we cannot modify any data members of the class, UNLESS the data member is declared as *mutable*
+- A non constant object can invoke a constant function above
+- In summary, a constant object can only invoke a constant function. A non constant object can invoke both kinds of methods
+
+### Mutable data members:
+- We learned earlier that:
+  - We cannot modify const data members no matter what
+  - We cannot modify data members inside const functions
+- There is one exception in const object though. It is called the mutable data member
+- Mutable is applicable only to data member of a class and not to local variables etc.
+- Reference data members cannot be declared as mutable
+- static data members cannot be declared as mutable either
+- const data members obviously can't be declared as mutable 

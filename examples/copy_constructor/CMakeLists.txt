@@ -3,3 +3,4 @@ project (SANDBOX)
 
 add_executable (copyconstructor main.cpp)
 add_executable (copyconstructor2 main2.cpp)
+add_executable (copyconstructor3 main3.cpp)
