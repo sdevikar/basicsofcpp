@@ -357,4 +357,75 @@ void MyMethod() const { // notice the use of const before curly brace
 - Mutable is applicable only to data member of a class and not to local variables etc.
 - Reference data members cannot be declared as mutable
 - static data members cannot be declared as mutable either
-- const data members obviously can't be declared as mutable 
+- const data members obviously can't be declared as mutable
+
+
+# Static data members
+- Associated with class and not the member
+- Shared by all objects of the class
+- Need to be defined outside the class scope and initialized in the source file (more on this later)
+- Can be public or private
+- Virtually eliminates the need for global variables
+
+## Static data member initialization:
+The initialization of static data member doesn't happen the same way as a normal instance data member.
+When we create an instance of a class, the memory for all the instance (non-static) data members get allocated.
+However, since static data member is a class data member, rather than an instance member, the declaration of static data member in the class definition doesn't automatically mean that the memory will be allocated for that member. In other words, static data member has to be separately and manually _defined_.
+
+As discussed earlier, in the application, initializations of global variables happen BEFORE main is executed. As such, class static variable initialization will happen before main, if it is initialized in global scope within the file.
+
+Example:
+```cpp
+class MyClass{
+
+public:
+  static int mydatamember; // this is just a declaration
+};
+
+MyClass::mydatamember = 0; // this is actual definition
+
+int main void(){
+  MyClass::mydatamember += 1;
+}
+
+```
+
+# Static function
+- Similar to static data members, these are per-class functions
+- Since they are per-class, they do not have _this_ pointer
+- As a result of not having this pointer, they cannot access instance data members (i.e. cannot access non-static data members)
+- Why do we need static member functions?
+  - To manipulate private static data member functions. i.e. public static functions will be used to access or modify private static member function
+- Static member function cannot share a name with non static member function
+- Static member function can't be a const function either - this is because const function need const this pointer and as said earlier, static functions don't have a this pointer
+
+## The linker error issue:
+- If the private static data member is not initialized in the application globally, we will get the linker error
+- This is because, up to the point the static data member is _defined_, the space was never allocated for it by the compiler, during the object creation
+
+
+# Friend function
+- A function that can access private and protected members of a class
+- The function is defined outside the class scope and only _declared_ as a "friend" function within the class scope
+- By _outside the class scope_ we mean a function that is defined outside in global scope, or within a _different class_, or it could be a function template (more on this later)
+
+## Why not just provide public APIs in a class?
+- It may seem that friend function is a loophole in encapsulation but...
+- Using friend function, we have the ability to control who has access to private members of the class.
+- Some typical use cases for friend function is:
+  - operator overloading: *Defining* a friend function within class scope doesn't make it a _member_ function. So, it's not visible to the application. This makes it useful for operator overloading
+  - test code
+- See the answers to this question: https://stackoverflow.com/questions/17434/when-should-you-use-friend-in-c#
+- As per the video lecture, there are some operators (like streaming operators), that are very hard to overload. In this case, the friend concept is useful
+
+
+# Friend Class
+- Same as friend function, but for a class. A class (A) declared to be the friend of class (B), will have access to the private and protected functions of class B.
+- This means, all functions in class A, will be able to access private and protected members of class B
+- A friend class can be a simple class (like class A) or a template class (more on this later)
+
+## Some properties of friend class:
+- A is a friend of B doesn't mean B is a friend of A - i.e. this relationship is non-associative
+
+
+# Operator overloading for UDT
