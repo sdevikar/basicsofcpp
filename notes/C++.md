@@ -428,4 +428,15 @@ int main void(){
 - A is a friend of B doesn't mean B is a friend of A - i.e. this relationship is non-associative
 
 
-# Operator overloading for UDT
+# Operator overloading for User Defined Datatypes:
+- We have seen already that operator overloading is simply a special type of function, with the operator as the invoking function name and the operands being its arguments. e.g.
+```cpp
+a+b;
+// the above is same as
+a.operator+(b);
+```
+- Now, we can overload the operator in different scopes.
+  - Class scope: We can define a public function inside the class. In this case, since the first argument to the function is implicitly ```*this```, we don't need to explicitly pass that argument.
+  - Global space or friend function: We can overload the operator in global space and/or declare it as a friend function. In this case, instances of both the classes will be required to be passed to the function (assuming the operator is binary)
+- We also need to be careful about overriding = operator for user defined datatypes and realize that it will be required wherever allocation of memory using ```new``` operator is involved. Because if we don't, compiler provides a default = operator that does only shallow copy and this could result in unexpected behavior. In general, if constructor uses operator ```new```, = operator should be overloaded
+- Study specific case of pre and post increment operator and how it's implemented in the examples
