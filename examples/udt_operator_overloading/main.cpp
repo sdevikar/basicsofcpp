@@ -29,5 +29,15 @@ int main(){
   cout << "Result of subtraction:" << endl;
   cout << "("<< c4.re << ", i" << c4.im << ")" << endl;
 
+  Complex c5 = ++c4;
+  cout << "("<< c5.re << ", i" << c5.im << ")" << endl;
+
+  c5 = c4++;
+  cout << "("<< c5.re << ", i" << c5.im << ")" << endl;
+
+  cout << "Value of post incremented instance" << endl;
+  cout << "("<< c4.re << ", i" << c4.im << ")" << endl;
+
+
 
 }

@@ -41,7 +41,7 @@ ptr = &b; // this is ok too
 
 int x, y;
 int &z = x; // this is ok
-int &z = y; ERROR - this is not allowed
+int &z = y; //ERROR - this is not allowed
 
 ```
 - One advantage of pointers is that it comes with a facility of operations that can be performed on it. e.g. on a 32 bit machine, incrementing a pointer by 1 will make it point to the current address + 4. Whereas for references, these operators like ++, -- etc are meaningless. Because these operators are interpreted as operations being performed on the original referent. i.e in above example, &z is interpreted as alias of x.

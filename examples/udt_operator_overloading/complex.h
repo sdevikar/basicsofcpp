@@ -26,4 +26,30 @@ public:
     return c;
   }
 
+  // this is pre-increment operator
+
+  // Notice here that the return value is reference to Complex object
+  // i.e. whoever is calling ++ operator will receive the **reference** to
+  // this object
+  Complex& operator++(){
+    cout << "Pre increment operator called" << endl;
+    re++;
+    im++;
+    return *this;
+  }
+
+  // this is post-increment operator
+  // notice the additional int argument
+  // also notice that we're returning a new object Complex c
+  // therefore, this is not returning a reference
+  // BEcause the caller will make a copy of Complex c, when they
+  // access it using = operator
+  Complex operator++(int){
+    cout << "Post increment operator called" << endl;
+    Complex c(re, im); // create a new object
+    re++; // change internal state
+    im++; // change internal state
+    return c; // return the copy of original object
+  }
+
 };
