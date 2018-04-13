@@ -440,3 +440,111 @@ a.operator+(b);
   - Global space or friend function: We can overload the operator in global space and/or declare it as a friend function. In this case, instances of both the classes will be required to be passed to the function (assuming the operator is binary)
 - We also need to be careful about overriding = operator for user defined datatypes and realize that it will be required wherever allocation of memory using ```new``` operator is involved. Because if we don't, compiler provides a default = operator that does only shallow copy and this could result in unexpected behavior. In general, if constructor uses operator ```new```, = operator should be overloaded
 - Study specific case of pre and post increment operator and how it's implemented in the examples
+
+## Doing more with operator overloading:
+- We studied a simple example of Complex class where we overrode the ```+``` operator to add two complex numbers. We also studied that we can override the operator in global space or in class scope as a member function. When we use global scope though, we're basically violating the encapsulation of private data members and thus this approach is not always practical.
+- Another thing worth noticing is that, the overriding that we did for ```+``` operator was not flexible. e.g. if we were to add a complex number and a real number like so: ```(3 + i4) + 5``` what we defined is not sufficient and we'll have to define additional overloaded methods for ```+``` operator. e.g.
+```cpp
+Complex operator+(const Complex& comp1, int r); // global override that says, first argument is complex number and second is double. This will take care of (3 + i4) + 5
+Complex operator+(int r, const Complex& comp); // this will take care of 5+(3 + i4)
+```
+- Note above that operator+ takes two arguments. Which means, the only option we have is to either have operator+ be overridden and as a friend function or do a global override. Particularly in the second case above, if we do ```5+(3 + i4)```, for a member operator+ function within class scope, it'll be translated to 5.(complex_number_instance_for_3+i4) and this is invalid
+- The solution to the above is still using a global function for operator overload, but then define it as a friend function, so it can access private data members of the class.
+
+## IO operations:
+- IO operations are the operations that you do when e.g. you're reading/writing from/to a stream/file etc. e.g. we want to be able to do something like:
+```cpp
+Complex c1(1,2);
+Complex c2(3,4);
+std::cout << c1 << c2; // this means (std::cout << c1) << c2;
+```
+- The cout operator above is a binary operator that has left to right precedence. The cout << c1 is interpreted as follows:
+```cpp
+// the following is the same as:
+std::cout << c1;
+// the following overloaded operator function
+ostream& operator<<(ostream &os, const Complex& c1){
+// some logic here
+}
+```
+- Notice above that operator returns ostream reference. This is required to implement chaining.
+- Here, for overloading ```<<``` operator, we have following options:
+  - Override in global space and pass it two arguments as shown above
+  - Override in ostream class with signature ```ostream& operator<<(const Complex& c)```
+    - Can't do this because we can't modify ostream class, which is a part of standard library
+  - Override in Complex class with signature ```ostream& operator<<(ostream &os)```
+    - this is equivalent to doing ```complex.operator<<(ostream& os)```
+    - and that is equivalent to ```complexobj << cout``` i.e the order is reversed.
+    - this breaks the syntax, therefore **IT IS NOT possible to use member functions for overloading of io operators**
+    - **Instead, use friend function**
+- Other observations:
+  - ostream/istream argument is not const in any signature, because it is ostream that we're modifying
+  - in overriding both, ostream and istream, we'd return reference to original ostream and istream to achieve chaining of << and/or >>
+
+## When to use what kind of operator overloading:
+- Use global overloading when encapsulation is not a concern. e.g. if you're simply trying to override an operator for a structure that wraps some primitive datatypes, pointers etc.
+-  Use member function when left operand (first argument) is guaranteed to be a class within which, the operator is overloaded. e.g. complexobj + realnumber. This translates to ```complexobj.operator+(int realnumber)``` and thus, to the operator+, the left operand is always the class object.
+- In majority of cases, use friend function for overloading the operators.
+
+## Some other considerations:
+- Consider effect of casting (more on this later)
+- Do it only when necessary
+
+
+
+# Namespaces
+- Namespaces are open. i.e. if you have defined a namespace before and added few things to it, you can later define some more elements to that namespace somewhere else.
+e.g.
+```cpp
+
+// file1
+namspace mynamespace {
+  int x;
+};
+
+//file2
+namespace mynamespace{
+  int y;
+};
+
+// following is valid
+mynamespace::x = 5;
+mynamespace::y = 10;
+
+```
+
+- There can be unnamed namespaces, just to segregate certain symbols. This is just another encapsulation technique, where only the symbols within the same namespace can see each other and interact with each other.
+- Just as a sidenote, global scope symbols can be identified using '::' operator. e.g. ::var means var is in global scope
+
+
+# Inheritance
+- Has to do with IS A relationship. e.g. Civic is a car
+- As such IS A relationship has to do with specialization/generalization. Civic is specialization and car is a generalization.
+- Inheritance syntax is as follows:
+
+```cpp
+// Single inheritance example:
+class Employee; // base class
+class Engineer : public Employee; // Engineer is a 'public-ly' derived class. Engineer IS AN Employee
+
+//Multiple inheritance example:
+class Vehicle; // base class
+class TwoWheeler : public Vehicle; // child1 of vehicle
+class FourWheeler : public Vehicle; // child2 of vehicle
+
+// there can also be multi-level inheritance
+class SoftwareEngineer : public Engineer; // Engineer is a base class here, which is in turn a child class of Employee
+
+// more on usage of 'public' keyword later
+
+```
+## Some properties of IS A relationship
+- Derived class _inherits_ all data members of base class
+- Derived class may add its own data Members
+- Derived class _inherits_ all  member functions of base class
+- Derived class may override the base class member function (WITHOUT changing signature) -- this is NOT the same as overloading
+- Derived class may overload the base class member function (BY changing signature, but keeping the name)
+- Derived class can NOT access the private members of base class
+- Derived class can access the protected members of the base class
+- Constructor of derived class must first call the constructor of base class to construct the base class instance of the derived class. i.e. derived class first constructs base class and then itself.
+- Destructor of derived class calls destructor of the base class instance of the derived class. i.e. derived class constructs and owns base class instance, keeps it and then destroys it, when it is destroying itself
