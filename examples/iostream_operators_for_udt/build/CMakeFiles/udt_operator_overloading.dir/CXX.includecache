@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/swapnildevikar/Documents/NPTEL/C++/examples/iostream_operators_for_udt/complex.h
+iostream
+-
+
+/Users/swapnildevikar/Documents/NPTEL/C++/examples/iostream_operators_for_udt/main.cpp
+iostream
+-
+complex.h
+/Users/swapnildevikar/Documents/NPTEL/C++/examples/iostream_operators_for_udt/complex.h
+
