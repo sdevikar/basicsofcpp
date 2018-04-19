@@ -548,3 +548,51 @@ class SoftwareEngineer : public Engineer; // Engineer is a base class here, whic
 - Derived class can access the protected members of the base class
 - Constructor of derived class must first call the constructor of base class to construct the base class instance of the derived class. i.e. derived class first constructs base class and then itself.
 - Destructor of derived class calls destructor of the base class instance of the derived class. i.e. derived class constructs and owns base class instance, keeps it and then destroys it, when it is destroying itself
+
+## Access specification:
+- Derived class can't access ```private``` member of the base class.
+- However, derived class can access the ```protected``` members of the base class.
+  - Keep in mind that protected members can ONLY be accessed using base class instance. For example:
+```
+class Base{
+protected:
+  int m_BaseX;
+};
+
+class Child : public Base{
+public:
+  void Print(){
+    //This is OK
+    cout << "Base class protected member is: " << m_BaseX << endl;
+  }
+};
+
+int main(void){
+  Child c;
+  // This is NOT ok
+  c.m_BaseX = 5;
+  return 0;
+}
+```
+
+## Friend functions and automatic casting:
+- Suppose you have a public friend function declared and defined in the base class:
+  - This friend function will have access to the private members of the base class
+- Now suppose you write a child class that inherits from base class
+  - By definition, child class will have access to the public base class member functions
+  - When we call this friend function on child class object and assuming child class hasn't overridden this function, this will be deemed as a simple case of inherited function and base class friend function will be called.
+  - The point to be noted here, is that, even though, the function call is on child instance, the call goes on base class instance. This is possible because the instance of the base class is included in the child class. And the child class is automatically casted to base class. This is known as **implicit casting**
+
+
+## Constructor and destructor:
+- As we discussed before, the child class has an instance of base class. So, naturally the child class will need access to the constructor and destructor of the base class. So, child class INHERITS the constructor and destructor of the base class. HOWEVER, the **inheritance semantics are different.**
+- In particular, child class cannot override the base class constructor and destructors.
+
+## Private inheritance
+- Private inheritance has nothing to do with IS A relationship. i.e. it is not used to create base and child class relationship. But rather, it is used to achieve something similar to composition design pattern, where one class is composed of one or more other classes.
+- As a result, private inheritance has no meaning in the design phase
+- Since there is no IS A relationship, there is NO implicit casting. i.e. in the example discussed before, if the child class had privately inherited the base class, calling the friend function with overloaded operator << will result in error, because when the << operator in base class is called, the child class  object won't be implicitly casted to base class
+
+## Protected inheritance
+- Also doesn't mean IS A relationship
+- No real design use case for implementing protected inheritance
