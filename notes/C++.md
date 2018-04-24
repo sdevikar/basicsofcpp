@@ -596,3 +596,8 @@ int main(void){
 ## Protected inheritance
 - Also doesn't mean IS A relationship
 - No real design use case for implementing protected inheritance
+
+## Private inheritance for composition
+The fact that every class object with IS A relationship with base class holds an instance of its base class implicitly, it is necessary to create base class object first.
+This is true for private inheritance as well, BUT, in private inheritance, THERE IS NO IS A RELATIONSHIP
+So, in effect, with private inheritance. we're creating an effect of composition
