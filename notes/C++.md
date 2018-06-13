@@ -601,3 +601,49 @@ int main(void){
 The fact that every class object with IS A relationship with base class holds an instance of its base class implicitly, it is necessary to create base class object first.
 This is true for private inheritance as well, BUT, in private inheritance, THERE IS NO IS A RELATIONSHIP
 So, in effect, with private inheritance. we're creating an effect of composition
+
+
+# Casting
+- Implicit casting occurs when compiler knows how to convert one datatype to the other. Conversions that lead to data loss are done with compiler warning
+
+```cpp
+double numerator = 5.0;
+int denominator = 4;
+
+// here the denominator will be implicitly upcasted to double datatype
+double answer = numerator / denominator;
+```
+- You cannot explicitly cast unrelated classes from one type to other. You can make the arbitrary class pointer point to other class object, but there is no point doing this because the class pointer will point to a memory that has some other class's data in it
+
+```cpp
+class A { //blah blah};
+class UnrelatedClassB { //blah blah};
+
+A a;
+UnrelatedClassB b;
+
+// following will result in a compiler error because the classes are not related.
+a = b; //ERROR
+
+A* pa;
+UnrelatedClassB* pb;
+
+pa = &b; // possible but wrong
+```
+
+- You can cast child class to base class (upcast) safely. The reason for this is that the child class has an object of base class and compiler knows how to refer to base class object in the child class.
+
+```cpp
+class A { //blah blah};
+class B : public A{ //blah blah};
+
+A a;
+B b;
+
+// This is OK
+a = b;
+
+// BUT this is not OK
+b = a;
+
+```
