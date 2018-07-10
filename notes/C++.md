@@ -550,9 +550,10 @@ class SoftwareEngineer : public Engineer; // Engineer is a base class here, whic
 - Destructor of derived class calls destructor of the base class instance of the derived class. i.e. derived class constructs and owns base class instance, keeps it and then destroys it, when it is destroying itself
 
 ## Access specification:
-- Derived class can't access ```private``` member of the base class.
-- However, derived class can access the ```protected``` members of the base class.
+- Derived class can't access _private_ member of the base class.
+- However, derived class can access the _protected_ members of the base class.
   - Keep in mind that protected members can ONLY be accessed using base class instance. For example:
+
 ```
 class Base{
 protected:
@@ -616,8 +617,8 @@ double answer = numerator / denominator;
 - You cannot explicitly cast unrelated classes from one type to other. You can make the arbitrary class pointer point to other class object, but there is no point doing this because the class pointer will point to a memory that has some other class's data in it
 
 ```cpp
-class A { //blah blah};
-class UnrelatedClassB { //blah blah};
+class A { /*blah blah*/};
+class UnrelatedClassB { /*blah blah*/};
 
 A a;
 UnrelatedClassB b;
@@ -634,8 +635,8 @@ pa = &b; // possible but wrong
 - You can cast child class to base class (upcast) safely. The reason for this is that the child class has an object of base class and compiler knows how to refer to base class object in the child class.
 
 ```cpp
-class A { //blah blah};
-class B : public A{ //blah blah};
+class A { /*blah blah*/};
+class B : public A{ /*blah blah*/};
 
 A a;
 B b;
@@ -647,3 +648,16 @@ a = b;
 b = a;
 
 ```
+
+## Static and Dynamic Binding
+- Refers to the process of compiler binding the function calls to the corresponding object either at compile time (static) or run time (dynamic)
+- The implication here is that compiler will bind a function call to the object based on the "type" of the object and not the content of the object
+- So, if we have a pointer to a parent class that holds the address of its child class, calling any function on that object will still call the function defined in the base class. This is counterintuitive, because the actual object that the object pointer holds is the child class object. This happens due to the compiler binding the function calls to the object statically i.e. at compile time. So, it doesn't know what object parent class object pointer will hold
+- To achieve dynamic binding, i.e. to call the function on based on the actual object content and not the object type, we need to declare a function as ```virtual```.
+- See dynamic_binding example code for more details
+
+### Properties of virtual
+- The class with a virtual function is called a polymorphic class
+- When a child class inherits parent class, the corresponding function is by default virtual in the child class as well
+- This means, if there is a grand-child class down the line, it will also see the corresponding function as virtual function
+- In the class hierarchy, function can be made virtual at any stage in the hierarchy and then it becomes virtual for all the classes downstream
