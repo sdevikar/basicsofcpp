@@ -28,7 +28,7 @@ Complex comp = {2, 3};
 ```
 
 ## Function pointers
-- Syntax for declaration of function pointers: <return_type> (\*<function_pointer_name>)(<args>)
+- Syntax for declaration of function pointers: <return_type> (\*<function_pointer_name\>)(_arguments_)
 For example:
 
 ```cpp
