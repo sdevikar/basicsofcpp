@@ -667,3 +667,5 @@ b = a;
 - When a child class inherits parent class, the corresponding function is by default virtual in the child class as well
 - This means, if there is a grand-child class down the line, it will also see the corresponding function as virtual function
 - In the class hierarchy, function can be made virtual at any stage in the hierarchy and then it becomes virtual for all the classes downstream
+
+### Virtual destructor
