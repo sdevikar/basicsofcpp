@@ -603,6 +603,12 @@ The fact that every class object with IS A relationship with base class holds an
 This is true for private inheritance as well, BUT, in private inheritance, THERE IS NO IS A RELATIONSHIP
 So, in effect, with private inheritance. we're creating an effect of composition
 
+## Inheritance and visibility:
+- This has to do with what happens to the visibility of a member of a base class when it is inherited by the child class
+- The simple answer is, two of the more restrictive visibility will be applied.
+  - e.g.#1 child class publicly inherits base class. In this case, base class's private members will remain private, public will remain public in child class.
+  - e.g.#2 child class privately inherits base class. In this case, public member of base class will become private in child class (i.e. child class cannot access the public members of base class directly using . operator)
+
 
 # Casting
 - Implicit casting occurs when compiler knows how to convert one datatype to the other. Conversions that lead to data loss are done with compiler warning
