@@ -143,9 +143,7 @@ that they both work on inputs (we call them arguments) and produce an output.
 
 
 # Memory management
-- C++ provides a shortcut alternative to malloc, calloc etc. It's called the operator ```new
-
-```
+- C++ provides a shortcut alternative to malloc, calloc etc. It's called the operator ```new```
 - With operator new, you can dynamically allocate memory to a datatype and initialize as below:
 ```cpp
 int a = new int(5); //this goes on a heap
@@ -669,3 +667,22 @@ b = a;
 - In the class hierarchy, function can be made virtual at any stage in the hierarchy and then it becomes virtual for all the classes downstream
 
 ### Virtual destructor
+- A destructor is nothing but a member function in  a class.
+- So, if you have created a class pointer using a reference to its base class, static binding will happen
+- Finally when you delete the class object using ```delete``` call, the destructor of base class will be called
+- Always make the base class virtual, if you're going to derive from it
+
+### Pure Virtual Function
+- Sometimes the classes are made for the sole purpose of having other classes inherit them and implement the specific functionality. e.g. an interface
+- In these kind of classes, providing the implementation for that particular function in the base class should not be possible
+- This can be accomplished by defining that function as pure virtual
+- Pure virtual function maybe defined or inherited
+- Pure virtual function is just a declaration. There is no body
+
+#### Abstract class and implications of pure virtual function
+- When one or more function in the class is declared pure virtual, the class is called Abstract Class.
+  - This means, no instance of this class can be created
+- In an abstract class, there can be data members, other non-pure virtual or even non virtual functions.
+- Data members in this abstract base class should be protected (i.e. it makes sense for the data members to be only accessed by derived members)
+- Whereas the functions in abstract class should be public
+- One thing to note is that, even though it is common for virtual functions to not have any implementation body, it is possible for them to have a body. This is useful when one wants to write some common code that a derived class will call before executing its own logic
