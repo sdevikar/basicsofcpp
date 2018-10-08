@@ -10,6 +10,7 @@ int main(void){
   Rectangle rect;
 
   rect.Draw();
+  rect.UnDraw(); // this calls Shape::UnDraw() too
 
   //ClosedConics cc; // this gives error
 }

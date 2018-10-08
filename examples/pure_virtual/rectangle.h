@@ -20,7 +20,10 @@ public:
     cout << "Rectangle Drawn!" << endl;
   };
 
+
   void UnDraw(){
+    // Notice how parent class function is called here
+    Shape::UnDraw();
     cout << "Rectangle UnDrawn!" << endl;
   };
 

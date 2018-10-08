@@ -685,4 +685,181 @@ b = a;
 - In an abstract class, there can be data members, other non-pure virtual or even non virtual functions.
 - Data members in this abstract base class should be protected (i.e. it makes sense for the data members to be only accessed by derived members)
 - Whereas the functions in abstract class should be public
-- One thing to note is that, even though it is common for virtual functions to not have any implementation body, it is possible for them to have a body. This is useful when one wants to write some common code that a derived class will call before executing its own logic
+- One thing to note is that, even though it is common for virtual functions to not have any implementation body, it is possible for them to have a body. This is useful when one wants to write some common code that a derived class will call before executing its own logic.
+- The parent class pure virtual function can be called simply by calling it on parent class scope.
+```cpp
+Parent::Function();
+```
+
+### Virtual Function Table
+- Virtual function tables come into play when dynamic binding is involved. i.e. for a function that was defined virtual.
+- Every class with a virtual function defined in it has a virtual function table. Remember that virtual function remains virtual in child classes too. i.e. if we have two classes like this:
+```cpp
+class B {
+  int i;
+public:
+  void f(){};
+  virtual void g(int x){}; // this is a virtual function
+};
+
+class D : public B{
+  int j;
+public:
+  void f(){};
+  void g(int x){}; // this is a virtual function too
+};
+
+```
+Both classes B and D above will have their own virtual function table
+- Some things to notice/remind:
+  - daughter class D is overriding the f() function in the base class
+  - Daughter class holds the object of parent class
+  - ```this``` pointer is always passed to a function call when the function is called on class object
+- Now, in case of static binding, this is how the calls are compiled:
+```cpp
+
+B b;
+D d;
+
+B *p = &b;
+b.f(); // this translates to B::f(&b)
+p->f(); // this translates to B::f(p)
+
+B *p = &d;
+d.f(); // this translates to D::f(&d)
+p->f(); // this translates to D::f(p)
+
+```
+- When dynamic binding is involved though, the following occurs:
+  - Each class has a virtual function table with pointers to functions
+
+| Class     | VFT entry for g |
+| :---------| :-------------- |
+| B         | B::g(B *const)  |
+| D         | D::g(D *const)  |
+
+However, for f() table looks like this, f being non-virtual
+
+| Class     | VFT entry for g |
+| :---------| :-------------- |
+| B         | B::f(B *const, int)  |
+| D         | D::f(B *const, int)  |
+
+```cpp
+B b;
+D d;
+
+b.g(5); // this translates to B::f(&b, int) as usual
+p->g(5); //this translates to p->vft[0](); i.e.
+        //0th function pointer from virtual function table is called
+        // in this case, the 0th fptr is function pointer to B::g()
+
+B *p = &d;
+d.g(5); // this translates to D::f(&d, int)
+p->g(5); //this translates to p->vft[0](); i.e.
+        //0th function pointer from virtual function table is called
+        // in this case, the 0th fptr is function pointer to D::g()
+        // i.e. the virtual function  table's 0th entry is overwritten
+```
+- The virtual functions are added in the VFT in the order in which they're defined
+
+
+## Casting in C++
+- We already know that upcasting is safe and downcasting is not. i.e. casting from daughter class to base class will not lead to loss of information. But the vice versa will lead to loss of information.
+- Implicit typecasting is taken care by the language itself. e.g. an integer will be automatically upcasted to a double when referenced as a double:
+```cpp
+int x = 5;
+double y;
+int z = 3;
+
+y = x; // implicit upcasting with no loss of information
+
+y = 4.5;
+x = y; // implicit down-casting with loss of information / precision
+
+double w = (double) x / z; // x is explicitly converted to double and z is implicitly converted to a double
+```
+- Casting usually requires compiler to allocate a different temporary storage for the cast value and initializes the temporary storage with value being cast. This means, the compiler most likely will do the following, except in few cases, where it doesn't need to do that:
+```cpp
+
+int num = 5;
+int den = 2;
+
+// this is explicit casting for num
+double result = (double)num/den;
+
+// and it is equivalent to:
+double temp_num = num;
+double temp_den = den;
+double result = temp_num / temp_den;
+
+```
+- C++ takes a significantly different approach towards casting. In C++ casting is done using cast operators.
+Cast operator is a binary operator with following syntax:
+```
+cast<T2>(T1)
+```
+Where,
+  - T2: Type to which casting needs to be done
+  - T1: expression or a variable in certain existing type e.g. int, double, class type etc.
+  - cast: keyword specifying what type of casting is being done
+- This kind of casting can be done statically or dynamically in C++
+
+### Types of cast operators:
+- const-cast: To change the const-ness/volatility of variable or expression. Either make a non-const expression const or vice versa. No computational change. ```const_cast<type>(expression)```
+- static-cast: Performs a non-polymorphic cast. i.e. it can be performed when you're in a non-polymorphic hierarchy (more on this later). Usually performs computational change. ```static_cast<type>(expression)```
+- reinterprete_cast: Almost similar to C style casting. Used to do typecastings between two unrelated types. e.g. pointer to class object and so on. Very risky and should be very sparingly used. ```reinterpret_cast<type>(expression)```
+- dynamic_cast: For runtime casting.
+
+#### Const cast:
+- This casting type reinterprets the const-ness of an expression. Here's a simple example:
+```cpp
+// function that accepts non const char pointer
+void print(char* str){ // print str};
+
+// in main
+const char * str = "Hello!";
+
+// this will result in error, because we're passing a const argument to a function that expects a non-const parameter:
+print(str); // error
+
+// so instead, we can do this:
+print(const_cast<char *>(str)); // this is going to typecast str to a non-const char pointer and pass to function
+
+```
+- This const_cast is also applicable to class objects. We know that if a class object is const, only const functions can be called on that object.
+
+```cpp
+
+class A {
+
+  void get() const{
+    // get something
+  }
+
+  void set(int arg) {
+    // set something
+  }
+};
+
+int main(void){
+  const A obj; // this is a const object, thus only const functions can be called on it
+}
+
+obj.get(); // this is ok
+
+obj.set(5); // NOT OK.
+
+const_cast<A&>(obj).set(5); // OK now. BEcause we created a non-const reference (A&) to const object
+
+const_cast<A>(obj).set(5); // Still not OK. You can't change the object from const to non const. You can only reference the object as non-const
+```
+- You can do the same thing using c style casting. But it's not readable and reader won't be able to understand why you casted
+- Also, illegality (e.g. converting from const class object to non const object) is prevented using const_cast
+- const-ness cannot be removed from function pointers or pointers in general. For example:
+
+```cpp
+const int j = 5; // this is a constant
+int *ptr = const_cast<int *>(&j); // this will result in undefined behavior
+
+```
