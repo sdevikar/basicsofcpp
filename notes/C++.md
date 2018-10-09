@@ -811,7 +811,7 @@ Where,
 - reinterprete_cast: Almost similar to C style casting. Used to do typecastings between two unrelated types. e.g. pointer to class object and so on. Very risky and should be very sparingly used. ```reinterpret_cast<type>(expression)```
 - dynamic_cast: For runtime casting.
 
-#### Const cast:
+#### const_cast:
 - This casting type reinterprets the const-ness of an expression. Here's a simple example:
 ```cpp
 // function that accepts non const char pointer
@@ -863,3 +863,14 @@ const int j = 5; // this is a constant
 int *ptr = const_cast<int *>(&j); // this will result in undefined behavior
 
 ```
+
+
+#### static_cast:
+- cast that can be decided at static (compile) time
+  - Allows for all conversions that are allowed implicitly. e.g. int, floats, void pointers to specific types etc.
+  - Allows for pointers to related class (upcast or downcast). But in case of downcast, no checks are performed at runtime
+  - Allows for conversion between user defined types. This is possible because static_cast can call single argument constructor or a conversion operator
+  - It can also convert:
+    - to rvalue references
+    - enum class value to integers
+    - convert any type of void
