@@ -925,7 +925,9 @@ The solution to something like this is **Template Specialization**.
 ```cpp
 template<>
 char* max<char*>(char* a, char *b){ return strcmp(a,b) > 0 ? a: b};
+
 ```
+
 There are a couple of things to notice here:
 
 1. empty ```template<>``` declaration
@@ -1019,3 +1021,142 @@ func(T x){
   typename T::name * p; // the use of typename here says that T::name is a datatype and not some member within T scope  
 }
 ```
+
+
+## Class templates:
+- Exact same concept as function template. i.e. we can parameterize the construction of the class. In case of function templates, we specified the data types of the function arguments at the function call location. In case of class templates we'd do the same, but for the datatype used internally by the class.
+- The syntax remains the same. e.g.
+
+```cpp
+
+template <class T>
+// or we can use template <typename T>
+
+class Stack{
+
+private:
+  T data[100];
+  int top; //maintains index of the stack top
+
+public:
+  push(const T &){// logic to push};
+  void pop(){// logic to pop};
+  const T& top(){//logic to return top of stack};
+}
+
+```
+
+We can create instances of the class from this template:
+
+```cpp
+Stack<int> s; // stack of integers
+Stack<char> s; // stack of chars
+```
+- It is important to note that in case of class templates, the instantiation has to be done explicitly. i.e. the template parameters will not be interpreted for you automatically.
+- Also remember that classes can be forward declared. i.e. we can just say something like
+
+```cpp
+template <class T>
+class Stack; // forward declaration
+```
+
+And then refer to this class:
+
+```cpp
+Stack<char> *char_stack_p; // this is ok, since its a pointer
+
+// but this is not OK, since this thing needs to call constructor etc
+Stack<char> char_stack; // this is NOT ok
+
+void MyFunction(Stack<int> stackx&); // this declaration is also OK.
+
+```
+
+### Default class templates:
+- We can have default datatypes for the template class. For example:
+
+```cpp
+
+// IMPLEMENTATION - 1
+
+template <class T1 = int, class T2=string >
+
+class Records{
+  //implementation.
+};
+
+//We can create the instance to the above class as:
+Records rs1;
+Records <double, string>rs2;
+Records <float>rs3;
+//etc.
+```
+
+
+## Class template specialization:
+- Remember the char* specialization of template function from before. It's the same concept here. i.e. if we want to provide explicit implementation for some datatype for a template class, we can. e.g. let's specialize the above class Records for char*.
+
+```cpp
+
+// IMPLEMENTATION - 2
+
+template <class T>
+class Records<T, char*>{
+  // implementation
+};
+
+```
+
+ - **Note** here that the Records class is now redefined with ONE template parameter declared above it. This is the parameter we're willing to templatize. And we have **specialized the second parameter only.**
+
+- Notice that during all of this, the template class Records, remains a class that has two template parameters. It is just that in the second definition, we have hard-coded the second template datatype to char* datatype
+
+- This kind of class is called partially specialized template class.
+
+In summary, these are the different ways you can create an instance of ```Records```:
+
+```cpp
+Records<int, string> r1(5, "swapnil"); //both template parameters specified
+Records<int> r2(11, "devikar"); //one template parameter specified, second is interpreted as string as default
+Records<> r3(12, "nnnn"); // no parameter is specified so by default int and string will be interpreted
+Records<string> r3("some_name", "some other name"); // only first template parameter is specified, AND overridden as string. so, <string, string> is the final type
+
+// following is an important one.
+// here, the second template datatype is char*, which is specialized above.
+// So, // IMPLEMENTATION - 2 is called
+
+Records<int, char*> r1(5, "swapnil");  
+```
+- Note that even though we are specifying only one parameter in case of calls like Records<int>, Records<string>, it does not mean that IMPLEMENTATION-2 will be invoked. IMPLEMENTATION-2 is merely there to prevent compiler from autogenerating the code for <T, char*> case.
+
+
+## Templates with class inheritance
+- The syntax for this is as below:
+
+```cpp
+template <class T>
+class Base{
+  T someproperty;
+
+  // other implemenations
+}
+
+template <class T>
+class Child : public Base<T>{
+  T somechildproperty;
+  T someotherchildproperty;
+
+  // some implementation
+}
+
+// if we later define some function in cpp class, this is how we will do it:
+
+template<class T>
+Child::SomeFunction<T>(int foo, int bar, T whatever){
+  // do something awesome
+}
+
+```
+- The important and only point to note here is that the templatization trickles down the entire hierarchy. This is to say that:
+  - both child and base classes are parameterized for datatype. i.e. not only does the child but also the parent class code will be generated with whatever template datatype the child class is instantiated
+  - i.e. in the above case, if Child class was instantiated with let's say string, then Child class properties will be string datatype (```somechildproperty``` and ```somechildproperty``` will be string). And also the ```someproperty``` type in base class will also be string
