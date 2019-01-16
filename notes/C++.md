@@ -998,9 +998,11 @@ max<double, 7>(arr2);
 - Note that the specialized template was also an example of template function overriding
 
 ### ```typename``` keyword
-So far we've been using the syntax ```template<class T>```. The keyword typename is a synonym for the keyword class in this case in almost all cases. And can be used interchangeably. There is only one exception to this.
+So far we've been using the syntax ```template<class T>```. The keyword typename is a synonym for the keyword class in this case in almost all cases. And can be used interchangeably. Although, it's a good practise to use ```typename``` and ```class``` appropriately, so as to make our intent clear. e.g. if you are intending the template parameter to be an object vs a premitive datatype, it'll be justified to use ```class``` instead of ```typename```
+There is only one exception to this.
 
-_typename_ keyword is basically used to tell the compiler that an expression is a type expression. Let's consider this case:
+_typename_ keyword is basically used to tell the compiler that an expression is a type expression. 
+Let's consider this case:
 
 ```cpp
 template <class T>
